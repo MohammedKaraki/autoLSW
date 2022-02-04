@@ -1,0 +1,349 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage[left=.8in,right=.8in]{geometry}
+% \usepackage[parfill]{parskip}
+\usepackage{siunitx}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+
+\newcommand{\mat}[1]{\bm{\mathit{#1}}}
+\newcommand{\groupelem}[2]{\{{#1}|{#2}\}}
+\newcommand{\m}{\textrm{m}}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+
+\begin{document}
+\tableofcontents
+\section{Exchange Hamiltonian}
+\subsection{General exchange Hamiltonian allowed by symmetry}
+A general bilinear Hamiltonian of interacting spins can be written as
+\begin{equation}
+  H=\frac{1}{2}\sum_{\langle ij\rangle}\bm{S}_i^T \mat{J}_{ij}\bm{S}_j,
+\end{equation}
+where $\bm{S}_i^T=\bigl(S_i^x\;S_i^y\;S_i^z\bigr)$, and $\mat{J}_{ij}$ is a matrix of interaction parameters satisfying $\mat{J}_{ij}=\mat{J}_{ji}^T$. Denoting by $G$ the space group of the crystal, for any $g\in G$ the Hamiltonian must satisfy $[\hat{g},H]=0$, where $\hat{g}$ denotes the Hilbert-space representation of $g$. Thus, we have
+\begin{align}
+  H &= \hat{g}^{\dagger}H\hat{g}\\
+   &= \sum_{\langle ij\rangle}\hat{g}^{\dagger}\bm{S}_i^T\hat{g} \mat{J}_{ij}\hat{g}^{\dagger}\bm{S}_j\hat{g}\\
+   &= \sum_{\langle ij\rangle}\bm{S}_{g^{-1}(i)} \mat{O}_g^T \mat{J}_{ij}\mat{O}_g\bm{S}_{g^{-1}(j)},
+\end{align}
+where $\mat{O}_g$ denotes the axial-vector representation of $g$ on the spin vector-operator. This implies that if the bond $\langle ij\rangle$ is preserved by $g$ (up to swapping the two sites), the interactions matrix $\mat{J}_{ij}$ must satisfy
+\begin{equation}
+  \mat{O}_g^T \mat{J}_{ij}\mat{O}_g= \begin{cases}
+    \mat{J}_{ij}&\textrm{if }g(i)=i~\textrm{and}~g(j)=j,\\
+    \mat{J}_{ij}^T&\textrm{if }g(i)=j~\textrm{and}~g(j)=i.
+  \end{cases}
+\end{equation}
+
+Similarly, a matrix $\mat{J}_{ij}$ is sufficient to determine $\mat{J}_{i'j'}$ that corresponds to any symmetry-related bond $\langle i'j'\rangle=\langle g^{-1}(i)g^{-1}(j)\rangle$:
+\begin{equation}
+  \mat{J}_{i'j'}=\mat{O}_g^T \mat{J}_{ij}\mat{O}_g.
+\end{equation}
+
+\subsection{Bilinear terms induced by an external electric field}
+Perturbing the crystal by a small electric field $\bm{E}$ can induce spin interactions. To first order in $\bm{E}$, we can express the bilinear contributions as
+\begin{equation}
+  H_1(\bm{E}) = \sum_{\alpha=\{x,y,z\}}E^{\alpha}\hat{P}^{\alpha},
+\end{equation}
+where the operator $\hat{P}^{\alpha}$ is defined as
+\begin{equation}
+   \hat{P}^{\alpha}= \frac{1}{2}\sum_{\langle ij\rangle}\bm{S}_i^T \mat{P}^{\alpha}_{ij}\bm{S}_j.
+\end{equation}
+
+The matrices $\mat{P}_{ij}^{\alpha}$ are constrained by symmetry due to the requirement that the three operators $\hat{P}^{\alpha=x,y,z}$ transform as components of a polar vector. Thus,
+
+\begin{align}
+  \hat{g}^{\dagger}\hat{P}^\alpha\hat{g} &= \frac{1}{2}\sum_{\langle ij\rangle}\bm{S}_{g^{-1}(i)}^T\mat{O}_g^T \mat{P}^{\alpha}_{ij}\mat{O}_g\bm{S}_{g^{-1}(j)}\\
+   &= \sum_{\alpha'}O_{g,\textrm{polar}}^{\alpha\alpha'}\hat{P}^{\alpha'}\\
+   &= \frac{1}{2}\sum_{\langle ij\rangle}\bm{S}_{i}^T \Bigl(\sum_{\alpha'}O_{g,\textrm{polar}}^{\alpha\alpha'}\mat{P}^{\alpha'}_{ij}\Bigr)\bm{S}_{j}.
+\end{align}
+Here $\mat{O}_{g,\textrm{polar}}$ refers to the polar-vector representation of $g$. That is, $\mat{O}_{g,\textrm{polar}}=\pm\mat{O}_{g}$ for proper and improper rotations, respectively.
+
+Therefore, for $i'=g^{-1}(i),j'=g^{-1}(j)$ we obtain the constraint
+\begin{equation}
+  \sum_{\alpha'}O_{g,\textrm{polar}}^{\alpha\alpha'}\mat{P}_{i'j'}^{\alpha'}=\mat{O}_g^T \mat{P}^{\alpha}_{ij}\mat{O}_g.
+\end{equation}
+Equivalently,
+\begin{equation}
+  \mat{P}_{i'j'}^{\alpha}=\sum_{\alpha'}O_{g^{-1},\textrm{polar}}^{\alpha\alpha'}\mat{O}_g^T \mat{P}^{\alpha'}_{ij}\mat{O}_g.
+\end{equation}
+
+Specifically, if the bond $\langle ij\rangle$ is invariant under $g$ (up to swapping), then
+\begin{equation}
+ \sum_{\alpha'}O_{g^{-1},\textrm{polar}}^{\alpha\alpha'}\mat{O}_g^T \mat{P}^{\alpha'}_{ij}\mat{O}_g= \begin{cases}
+    \mat{P}_{ij}^{\alpha}&\textrm{if }g(i)=i~\textrm{and}~g(j)=j,\\
+    \mat{P}_{ij}^{\alpha T}&\textrm{if }g(i)=j~\textrm{and}~g(j)=i.
+ \end{cases}
+\end{equation}
+
+
+\subsection{Bilinear terms induced by strain}
+Similar to an electric field perturbation, we can write the bilinear terms induced by a strain tensor $\sigma^{\alpha \beta}$ as
+\begin{equation}
+  H_2(\{\sigma^{\alpha\beta}\})=\sum_{\alpha,\beta=\{x,y,z\}}\sigma^{\alpha\beta}\hat{\Sigma}^{\alpha\beta}
+\end{equation}
+where the operator $\hat{\Sigma}^{\alpha\beta}$ is defined as
+\begin{equation}
+   \hat{\Sigma}^{\alpha\beta}= \frac{1}{2}\sum_{\langle ij\rangle}\bm{S}_i^T \mat{\Sigma}^{\alpha\beta}_{ij}\bm{S}_j.
+\end{equation}
+
+The nine operators $\hat{\Sigma}^{\alpha\beta}$ transform as a rank-2 tensor. Analogous to the electric-field treatment, the transformation properties of $\hat{\Sigma}^{\alpha\beta}$ allow us to obtain the following constraints on the matrices $\bm{\Sigma}_{ij}^{\alpha\beta}$:
+\begin{equation}
+  \mat{\Sigma}_{i'j'}^{\alpha\beta}=\sum_{\alpha'\beta'}O_{g^{-1}}^{\alpha\alpha'}O_{g^{-1}}^{\beta\beta'}\mat{O}_g^T \mat{\Sigma}^{\alpha'\beta'}_{ij}\mat{O}_g.
+\end{equation}
+
+Specifically, if the bond $\langle ij\rangle$ is invariant under $g$ (up to swapping), then
+\begin{equation}
+ \sum_{\alpha'\beta'}O_{g^{-1}}^{\alpha\alpha'}O_{g^{-1}}^{\beta\beta'}\mat{O}_g^T \mat{\Sigma}^{\alpha'\beta'}_{ij}\mat{O}_g= \begin{cases}
+    \mat{\Sigma}_{ij}^{\alpha\beta}&\textrm{if }g(i)=i~\textrm{and}~g(j)=j,\\
+    \mat{\Sigma}_{ij}^{\alpha \beta T}&\textrm{if }g(i)=j~\textrm{and}~g(j)=i.
+ \end{cases}
+\end{equation}
+
+\section{Symmetry representation in $k$-space}
+Let $A=(\bm{a}_1\;\bm{a}_2\;\bm{a}_3)$ be the matrix whose columns are the primitive translations of the lattice. Any unit cell can be labelled by a vector $\bm{n}={(n_1\;n_2\;n_3)}^T\in\mathbb{Z}^{3}$:
+\begin{align}
+\bm{r}_{\bm{n}} &= n_1\bm{a}_1+n_2\bm{a}_2+n_3\bm{a}_3\\
+  &= A\bm{n}.
+\end{align}
+Let $A\bm{\delta}_i$, for possibly fractional vector $\bm{\delta}_i$, denote the position of the atom $i$ in the unit cell $\bm{n}=\bm{0}$. The position of any atom in the crystal can be written as
+\begin{equation}
+  \bm{r}=\mat{A}(\bm{n}+\bm{\delta}),
+\end{equation}
+for unique $\bm{n}\in\mathbb{Z}^{3}$ and $\bm{\delta}\in\{\bm{\delta}_i\}$.
+
+An element $g=\{R|\bm{t}\}\in G$ consists of a (im-)\@proper rotation matrix $R$ and a translation $\bm{t}$:
+\begin{equation}
+  g(A\bm{x})=A(R\bm{x}+\bm{t}),
+\end{equation}
+with an inverse $g^{-1}=\{R^{-1}|-R^{-1}\bm{t}\}$.
+
+Therefore, the spins transform as
+\begin{align*}
+  \bm{S}_{A(\bm{n}+\bm{\delta})}&\xrightarrow{g}\hat{g}^{\dagger}\bm{S}_{A(\bm{n}+\bm{\delta})}\hat{g}\\
+   &= O_{g}\bm{S}_{g^{-1}(A(\bm{n}+\bm{\delta}))}\\
+   &= O_{g}\bm{S}_{AR^{-1}(\bm{n}+\bm{\delta}-\bm{t})}\\
+   &= O_{g}\bm{S}_{A(R^{-1}(\bm{n}+\bm{\delta}-\bm{t})-\bm{\delta}'+\bm{\delta}')}\\
+   &= O_{g}\bm{S}_{A(\bm{n}'+\bm{\delta}')},
+\end{align*}
+where $\bm{n}'\equiv R^{-1}(\bm{n}+\bm{\delta}-\bm{t})-\bm{\delta}'$, and $\bm{\delta}'\in\{\bm{\delta}_i\}$ is chosen (uniquely) such that $\bm{n}'\in\mathbb{Z}^{3}$.
+
+Thus, in Fourier space
+\begin{align*}
+  \bm{S}_{\bm{k}}^{\delta}&\equiv\sum_{\bm{n}}e^{i\bm{k}\cdot\bm{n}}\bm{S}_{A(\bm{n}+\bm{\delta})}\\
+   &\xrightarrow{g}O_g\sum_{\bm{n}}e^{i\bm{k}\cdot\bm{n}}\bm{S}_{A(\bm{n}'+\bm{\delta}')}\\
+   &=O_g\sum_{\bm{n}}e^{i\bm{k}\cdot(R\bm{n}'+R\bm{\delta}'-\bm{\delta}+\bm{t})}\bm{S}_{A(\bm{n}'+\bm{\delta}')}\\
+   &=e^{i\bm{k}\cdot(R\bm{\delta}'-\bm{\delta}+\bm{t})}O_g\sum_{\bm{n}}e^{i\bm{k}\cdot R\bm{n}'}\bm{S}_{A(\bm{n}'+\bm{\delta}')}\\
+   &=e^{i\bm{k}\cdot(R\bm{\delta}'-\bm{\delta}+\bm{t})}O_g\bm{S}_{R^T\bm{k}}^{\delta'}.
+\end{align*}
+
+
+
+
+
+
+\section{The relation between crystalline and magnetic-order lattices}
+Let $\{\bm{a}_i\}$ refer to the primitive Bravais vectors of the crystalline lattice, and $\{\bm{b}_i\}$ to the corresponding primitive vectors in reciprocal space, that is,
+\begin{equation}\label{recips}
+  \bm{a}_i\cdot\bm{b}_j=\delta_{ij}.
+\end{equation}
+The magnetic order may enlarge the primitive unit cell. Denoting the new primitive vectors by $\{\bm{a}^\textrm{m}_i\}$, we can express their relation to $\{\bm{a}_i\}$ as
+\begin{equation}\label{ams}
+  \begin{pmatrix}
+    \bm{a}^{\m}_1&
+    \bm{a}^{\m}_2&
+    \bm{a}^{\m}_3
+  \end{pmatrix}=
+  \begin{pmatrix}
+    \bm{a}_1&
+    \bm{a}_2&
+    \bm{a}_3
+  \end{pmatrix}M,
+\end{equation}
+where $M$ is an integer-valued 3\texttimes3 matrix.
+
+Eq.~\ref{recips} can also be written as
+\begin{equation}
+  {\begin{pmatrix}
+    \bm{b}_1&
+    \bm{b}_2&
+    \bm{b}_3
+  \end{pmatrix}}^T
+  \begin{pmatrix}
+    \bm{a}_1&
+    \bm{a}_2&
+    \bm{a}_3
+  \end{pmatrix}=\mathbb{I}_{3\times3},
+\end{equation}
+which can be combined with Eq.~\ref{ams} to obtain
+\begin{equation}
+  \mathbb{I}_{3\times3}  = M^{-1}
+  {\begin{pmatrix}
+    \bm{b}_1&
+    \bm{b}_2&
+    \bm{b}_3
+  \end{pmatrix}}^T
+  \begin{pmatrix}
+    \bm{a}^{\m}_1&
+    \bm{a}^{\m}_2&
+    \bm{a}^{\m}_3
+  \end{pmatrix}.
+\end{equation}
+Thus, the magnetic-lattice primitive vectors in reciprocal space are
+\begin{equation}
+  \begin{pmatrix}
+    \bm{b}^{\m}_1&
+    \bm{b}^{\m}_2&
+    \bm{b}^{\m}_3
+  \end{pmatrix}
+  =\begin{pmatrix}
+    \bm{b}_1&
+    \bm{b}_2&
+    \bm{b}_3
+  \end{pmatrix}{M^{-1}}^T
+\end{equation}
+\subsection{Mapping between the reciprocal-space Hamiltonians of the two lattices}
+
+An exchange Hamiltonian $H$ can be expressed in crystalline-lattice $k$-space as
+\begin{equation}
+  H=\frac{1}{2}\sum_{\bm{k}}\sum_{\delta_1\delta_2}S^{\delta_1\dagger}_{\bm{k}}J^{\delta_1\delta_2}_{\bm{k}}S^{\delta_2}_{\bm{k}},
+\end{equation}
+and, equivalently, in magnetic-lattice $q$-space  as
+\begin{equation}
+  H=\frac{1}{2}\sum_{\bm{q}}\sum_{\delta_1^{\m}\delta_2^{\m}}S^{\delta_1^{\m}\dagger}_{\bm{q}}\tilde{J}^{\delta_1^{\m}\delta_2^{\m}}_{\bm{q}}S^{\delta_2^{\m}}_{\bm{q}},
+\end{equation}
+where $\delta$'s and $\delta^{\m}$'s label the crystalline and magnetic sub-lattices, respectively.
+
+Given $J^{\delta_1\delta_2}_{\bm{k}}$, our goal is to find $\tilde{J}^{\delta_1^{\m}\delta_2^{\m}}_{\bm{q}}$. To do this with full generality, it is convenient to introduce some notation,
+\begin{align}
+  A &=  \begin{pmatrix}
+    \bm{a}_1&
+    \bm{a}_2&
+    \bm{a}_3
+  \end{pmatrix}\\
+  B &=  \begin{pmatrix}
+    \bm{b}_1&
+    \bm{b}_2&
+    \bm{b}_3
+  \end{pmatrix}\\
+  A^{\m} &=  \begin{pmatrix}
+    \bm{a}^{\m}_1&
+    \bm{a}^{\m}_2&
+    \bm{a}^{\m}_3
+  \end{pmatrix}\\
+  B^{\m}&=  \begin{pmatrix}
+    \bm{b}^{\m}_1&
+    \bm{b}^{\m}_2&
+    \bm{b}^{\m}_3
+  \end{pmatrix}.
+\end{align}
+
+Any site $\bm{r}$ can be uniquely decomposed as
+\begin{equation}
+  \bm{r}=A(\bm{n}+\bm{\delta}),
+\end{equation}
+or, 
+\begin{equation}
+   \bm{r}= A^{\m}(\bm{n}^{\m}+\bm{\delta}^{\m}),
+\end{equation}
+where $\bm{n}$ ($\bm{n}^{\m}$) is an integer-valued vector labelling a unit cell in the crystalline (magnetic) lattice, and $\bm{\delta}$ and $\bm{\delta}^{\m}$ are fractional parts labelling a sub-lattice.
+
+In real space, the Hamiltonian reads
+\begin{align}
+  H &= \frac{1}{2}\sum_{\bm{n}_1\bm{\delta}_1}\sum_{\bm{n}_2\bm{\delta}_2}\bm{S}_{A(\bm{n}_1+\bm{\delta}_1)}^T J_{\bm{n}_1-\bm{n}_2}^{\delta_1,\delta_2}\bm{S}_{A(\bm{n}_2+\bm{d}_2)}\label{rsh}\\
+   &= \frac{1}{2}\sum_{\bm{n}_1^{\m}\bm{\delta}_1^{\m}}\sum_{\bm{n}_2^{\m}\bm{\delta}_2^{\m}}\bm{S}_{A^{\m}(\bm{n}_1^{\m}+\bm{\delta}_1^{\m})}^T \tilde{J}_{\bm{n}_1^{\m}-\bm{n}_2^{\m}}^{\delta_1^{\m},\delta_2^{\m}}\bm{S}_{A^{\m}(\bm{n}_2^{\m}+\bm{d}_2^{\m})}\label{rshm}.
+\end{align}
+
+Given $\bm{n}^{\m}$ and $\bm{\delta}^{\m}$, we need to find the unique $\bm{n}$ and $\bm{\delta}$ satisfying
+\begin{equation}\label{ama}
+  A^{\m}(\bm{n}^{\m}+\bm{\delta}^{\m})=A(\bm{n}+\bm{\delta}).
+\end{equation}
+
+This can be done by searching for the (unique) sublattice $\bm{\delta}$ that makes the following expression for $\bm{n}$ integer-valued,
+\begin{align}
+  \bm{n} &= A^{-1}A^{\m}(\bm{n}^{\m}+\bm{\delta}^{\m})-\bm{\delta}\\
+   &= M(\bm{n}^{\m}+\bm{\delta}^{\m})-\bm{\delta},
+\end{align}
+where Eq.~\ref{ams} was used in the last line. We can also rewrite the last equation as (here the dependence of quantities on $\bm{n}^{\m}$ and $\bm{\delta}^{\m}$ is explicitly shown)
+\begin{equation}\label{dndef}
+  \bm{n}(\bm{n}^{\m},\bm{\delta}^{\m})= M\bm{n}^{\m}+\delta\bm{n}(\bm{\delta}^{\m}),
+\end{equation}
+where $\delta\bm{n}(\bm{\delta}^{\m})\equiv M\bm{\delta}^{\m}-\bm{\delta}$. Note that all terms in Eq.~\ref{dndef} are integer-valued.
+
+From Eqs.~\ref{rsh},~\ref{rshm} and~\ref{ama}, we have
+\begin{align}
+  \tilde{J}_{\bm{n}_1^{\m}-\bm{n}_2^{\m}}^{\delta_1^{\m},\delta_2^{\m}} &= 
+  J_{\bm{n}_1-\bm{n}_2}^{\delta_1,\delta_2}\\
+   &= J_{M^{-1}(\bm{n}_1^{\m}-\bm{n}_2^{\m})+\delta\bm{n}(\bm{\delta}_1^{\m})-\delta\bm{n}(\bm{\delta}_2^{\m})}^{\delta_1,\delta_2}.
+\end{align}
+Therefore,
+\begin{align}
+  \tilde{J}_{\bm{q}}^{\delta_1^{\m},\delta_2^{\m}} &= \sum_{\bm{n}^{\m}}e^{i\bm{q}\cdot\bm{n}^{\m}}\tilde{J}_{\bm{n}^{\m}}^{\delta_1^{\m},\delta_2^{\m}}\\
+   &= \sum_{\bm{n}^{\m}}e^{i\bm{q}\cdot\bm{n}^{\m}}J_{M\bm{n}^{\m}+\delta\bm{n}(\bm{\delta}_1^{\m})-\delta\bm{n}(\bm{\delta}_2^{\m})}^{\delta_1,\delta_2}\\
+   &= \frac{1}{N}\sum_{\bm{n}^{\m}}e^{i\bm{q}\cdot\bm{n}^{\m}}\sum_{\bm{k}\in{[0,2\pi)}^3}e^{-i\bm{k}\cdot(M\bm{n}^{\m}+\delta\bm{n}(\bm{\delta}_1^{\m})-\delta\bm{n}(\bm{\delta}_2^{\m}))}J_{\bm{k}}^{\delta_1,\delta_2}\\
+   &= \frac{1}{N}\sum_{\bm{k}\in{[0,2\pi)}^3}e^{-i\bm{k}\cdot(\delta\bm{n}(\bm{\delta}_1^{\m})-\delta\bm{n}(\bm{\delta}_2^{\m}))}\sum_{\bm{n}^{\m}}e^{i(\bm{q}-\bm{k}\cdot M)\cdot\bm{n}^{\m}}J_{\bm{k}}^{\delta_1,\delta_2}\\
+   &= \frac{N^{\m}}{N}\sum_{\bm{k}\in{[0,2\pi)}^3}e^{-i\bm{k}\cdot(\delta\bm{n}(\bm{\delta}_1^{\m})-\delta\bm{n}(\bm{\delta}_2^{\m}))}\sum_{\bm{l}\in\mathbb{Z}^3}\delta_{M^T\bm{k},\bm{q}+2\pi\bm{l}}J_{\bm{k}}^{\delta_1,\delta_2}\\
+   &= \frac{N^{\m}}{N}\sum_{\bm{l}\in\mathbb{Z}^3}e^{-i{(\bm{q}+2\pi\bm{l})}^T M^{-1}(\delta\bm{n}(\bm{\delta}_1^{\m})-\delta\bm{n}(\bm{\delta}_2^{\m}))}J_{M^{-1}^{T}(\bm{q}+2\pi\bm{l})}^{\delta_1,\delta_2}\Theta\bigl(M^{-1}^{T}\bm{l}\in[0,1)\bigr).
+\end{align}
+$N$ and $N^{\m}$ are the numbers of unit cells in the crystalline and magnetic lattices.
+
+.............
+
+\begin{equation}
+  \hat{g}^{\dagger}\tilde{\bm{S}}_{\bm{q}}^{\delta^{\m}}\hat{g}=\sum_{\mathclap{\substack{
+    \delta'\\
+    \bm{l}\in\mathbb{Z}\\
+    M^{-1}^{T}\bm{l}\in{[0,1)}^3\\
+    \bm{k}=M^{-1}^{T}(\bm{q}+2\pi \bm{l})
+  }}}   e^{-i\bm{k}^T\big[(M\bm{\delta}^{\m}-\bm{\delta})-R(M\bm{\delta}^{\m}'-\bm{\delta}')\bigr]}
+  \rho^{\bm{k}}_{\delta\delta'}(g)\tilde{\bm{S}}_{M^{T}R^{T}\bm{k}}^{\delta^{\m}'}
+\end{equation}
+
+........
+
+
+
+
+\section{Magnetic space subgroup unbroken by perturbations}
+A spatially uniform perturbation can break elements of the magnetic point group as well as anti-unitary translations. All anti-unitary translations are broken in the presence of an external magnetic field, but are unaffected by an electric-field or strain perturbation. The preserved subgroup of the magnetic point group will depend on the directions of the electric and magnetic fields and the components of the strain tensor. We can find all possible subgroups, as well as the specific directions of the applied fields that can realize each subgroup, by considering the transformation properties of the perturbations.
+
+To illustrate the idea, consider a magnetic field perturbation $H'\sim\bm{B}\cdot\bm{S}$. This consists of three components that transform like an axial vector. Given a magnetic point group $P$, the perturbation can be decomposed into co-irreps of $P$. For each co-irrep (which corresponds to specific directions of the field), the preserved symmetry elements of $P$ can be identified as those represented by the identity matrix.
+
+To obtain the co-irrep decomposition, the characters of the unitary subgroup $U_{P}\subset P$ are needed. Define $\gamma_{\theta}=\Tr R(\theta, \hat{\bm{n}})=1+e^{i\theta}+e^{-i\theta}$, the trace of a proper 3\texttimes3 rotation matrix by an angle $\theta$ about $\hat{\bm{n}}$.
+
+For a symmetry $g_{\theta}^{\pm}$ consisting, respectively, of proper or improper rotation by $\theta$ about any axis, the characters of the 3-dimensional magnetic-perturbation representation are
+\begin{equation}
+  \chi^B(g^{\pm}_{\theta})=\gamma_{\theta},
+\end{equation}
+and for an electric field we have
+\begin{equation}
+  \chi^E(g^{\pm}_{\theta})=\pm\gamma_{\theta}.
+\end{equation}
+
+To find a similar formula for strain, note that the five nontrivial components of a rank-2 symmetric tensor transform like spin-2,
+\begin{equation}
+  R^{S=2}=\diag(1\;e^{i\theta}\;e^{-i\theta}\;e^{i2\theta}\;e^{-i2\theta}).
+\end{equation}
+Therefore, the character of the 6-dimensional representation of a strain perturbation is 
+\begin{align}
+  \chi^{\sigma}(g^{\pm}_{\theta}) &= 1+\Tr R^{S=2} \\
+   &= \gamma_{\theta}^2-\gamma_{\theta}.
+\end{align}
+
+\newcommand{\ndtwonio}{Nd\textsubscript{2}NiO\textsubscript{4.11}}
+
+...............
+
+\bibliography{refs}{}
+\bibliographystyle{plain}
+\end{document}
