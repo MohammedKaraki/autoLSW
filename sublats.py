@@ -162,7 +162,8 @@ class MagCrystal:
                 "/.{k1->kk[[1]],k2->kk[[2]],k3->kk[[3]]};")
 
         code.append("fourierns={" + ",".join("{{{},{},{}}}".format(
-            *[str(x) for x in n]) for n in self.fourier_ns) + "}")
+            *[str(x) for x in n]) for n in self.fourier_ns) + "}"
+            + ";")
 
         for magidx1 in range(num_magsublats):
             for magidx2 in range(num_magsublats):
@@ -228,7 +229,7 @@ class MagCrystal:
 
         dirs = "{" + ",".join(magsublat.direction_xyz for magsublat in
             self.magsublats.magsublats_list) + "}"
-        code.append(r"dirs=" + dirs)
+        code.append(r"dirs=" + dirs + ";")
         code.append(r"omega=make\[CapitalOmega][dirs];")
 
         code.append(r"toLocal[mat_]:=omega.mat.Transpose[omega];")
@@ -241,10 +242,11 @@ class MagCrystal:
         code.append(r"normalizedlocaltildeJq[q1_,q2_,q3_]="
             r"normalizer.localtildeJ[q1,q2,q3].normalizer//Simplify;")
 
+        # TODO: verify (normalizer[[#2, #2]]/normalizer[[#1, #1]]) factor below
         code.append(r"""
             szIdxs=Range[3,Length[normalizedlocaltildeJq[0,0,0]],3];
             chempot=DirectSum@((#*DiagonalMatrix[{-1,-1,0}])&/@(
-            Total/@Outer[normalizedlocaltildeJq[0,0,0][[
+            Total/@Outer[(normalizer[[#2, #2]]/normalizer[[#1, #1]])normalizedlocaltildeJq[0,0,0][[
             #1,#2]]&,szIdxs,szIdxs]));
             Ridxs=Flatten[({-2,-1}+3*#)&/@Range[Length[szIdxs]]];
 
@@ -255,8 +257,6 @@ class MagCrystal:
             evals[q1_,q2_,q3_]:=NumericalSort@Chop@Eigenvalues[metric.R[q1,q2,q3]];
             """)
 
-        code.append("Print[\"R[0,0,0]:\"]")
-        code.append("MatrixForm@Simplify@R[0,0,0]")
         code.append(r'Print["R[q1,q2,q3]:"]')
         code.append(r"MatrixForm@Simplify@R[q1,q2,q3]")
 
