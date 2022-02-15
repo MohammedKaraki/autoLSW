@@ -10,44 +10,28 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      6954,        220]
-NotebookOptionsPosition[      6611,        206]
-NotebookOutlinePosition[      7000,        222]
-CellTagsIndexPosition[      6957,        219]
+NotebookDataLength[      7683,        242]
+NotebookOptionsPosition[      7340,        228]
+NotebookOutlinePosition[      7729,        244]
+CellTagsIndexPosition[      7686,        241]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"rules", "=", 
-   RowBox[{"{", "}"}]}], ";"}], "\n", 
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"metricR", "[", 
-     RowBox[{"k1_", ",", "k2_", ",", "k3_"}], "]"}], "=", 
-    RowBox[{"Simplify", "[", 
-     RowBox[{
-      RowBox[{"metric", ".", 
-       RowBox[{"(", 
-        RowBox[{"R", "[", 
-         RowBox[{"k1", ",", "k2", ",", "k3"}], "]"}], ")"}]}], "/.", " ", 
-      "rules"}], "]"}]}], ";"}], "\n"}], "\[IndentingNewLine]", 
- RowBox[{
   RowBox[{"interpolate", "[", 
    RowBox[{"pts_", ",", "t_"}], "]"}], ":=", 
   RowBox[{"(", 
    RowBox[{
     RowBox[{"n", "=", 
-     RowBox[{"Length", "[", "pts", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Length", "[", "pts", "]"}]}], ";", 
     RowBox[{"m", "=", 
      RowBox[{"1", "+", 
       RowBox[{"IntegerPart", "[", 
        RowBox[{"t", "*", 
         RowBox[{"(", 
          RowBox[{"n", "-", "1"}], ")"}]}], "]"}]}]}], ";", 
-    "\[IndentingNewLine]", 
     RowBox[{"l", "=", 
      RowBox[{"FractionalPart", "[", 
       RowBox[{"t", "*", 
@@ -64,51 +48,34 @@ Cell[BoxData[{
        RowBox[{"[", 
         RowBox[{"m", "+", "1"}], "]"}], "]"}]}]}]}], ")"}]}], "\n", 
  RowBox[{
-  RowBox[{
-   RowBox[{"vline", "[", "x_", "]"}], ":=", 
-   RowBox[{"Line", "[", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"x", ",", "0"}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"x", ",", "14"}], "}"}]}], "}"}], "]"}]}], 
-  "\n"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"{", 
-     RowBox[{"kGamma", ",", "kT", ",", "kF", ",", "kL"}], "}"}], "=", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"\"\<\[CapitalGamma]\>\"", ",", 
-        RowBox[{"{", 
-         RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"\"\<T\>\"", ",", 
-        RowBox[{"{", 
-         RowBox[{"\[Pi]", ",", "0", ",", "\[Pi]"}], "}"}]}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"\"\<F\>\"", ",", 
-        RowBox[{"{", 
-         RowBox[{"\[Pi]", ",", "0", ",", "0"}], "}"}]}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"\"\<L\>\"", ",", 
-        RowBox[{"{", 
-         RowBox[{"0", ",", "\[Pi]", ",", "\[Pi]"}], "}"}]}], "}"}]}], "}"}]}],
-    ";"}], "\[IndentingNewLine]", "\n"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{
-    RowBox[{"{", 
-     RowBox[{"labels", ",", "pts"}], "}"}], "=", 
-    RowBox[{"Transpose", "@", 
+  RowBox[{"vline", "[", "x_", "]"}], ":=", 
+  RowBox[{"Line", "[", 
+   RowBox[{"{", 
+    RowBox[{
      RowBox[{"{", 
+      RowBox[{"x", ",", 
+       RowBox[{"-", "1000"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "1000"}], "}"}]}], "}"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"labelsMap", ":=", 
+   RowBox[{"Association", "[", 
+    RowBox[{
+     RowBox[{
       RowBox[{
-      "kF", ",", "kL", ",", "kT", ",", "kF", ",", "kGamma", ",", "kL", ",", 
-       "kGamma", ",", "kT"}], "}"}]}]}], ";"}], "\[IndentingNewLine]", 
-  "\n"}], "\[IndentingNewLine]", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "->", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], "&"}], "/@", "ksAndLabels"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"findKLabel", "[", "k_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"labelsMap", "[", "k", "]"}], "/.", 
+   RowBox[{
+    RowBox[{"Missing", "[", "__", "]"}], "->", 
+    "\"\<\>\""}]}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"evals", "[", 
@@ -117,92 +84,147 @@ Cell[BoxData[{
     RowBox[{"Chop", "@", 
      RowBox[{"Eigenvalues", "[", 
       RowBox[{"metricR", "[", 
-       RowBox[{"k1", ",", "k2", ",", "k3"}], "]"}], "]"}]}]}]}], ";"}], "\n", 
-
+       RowBox[{"k1", ",", "k2", ",", "k3"}], "]"}], "]"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"numpts", "=", 
-    RowBox[{"Length", "[", "pts", "]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
- RowBox[{"Plot", "[", 
-  RowBox[{
-   RowBox[{"Re", "@", 
-    RowBox[{"(", 
-     RowBox[{"evals", "@@", 
-      RowBox[{"interpolate", "[", 
-       RowBox[{"pts", ",", "t"}], "]"}]}], ")"}]}], ",", 
-   RowBox[{"{", 
-    RowBox[{"t", ",", "0", ",", "1"}], "}"}], ",", 
-   RowBox[{"PlotRange", "->", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"0", ",", "1"}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"0", ",", "All"}], "}"}]}], "}"}]}], ",", 
-   RowBox[{"Epilog", "->", 
-    RowBox[{"vline", "/@", 
-     RowBox[{"(", 
-      RowBox[{
-       RowBox[{"(", 
-        RowBox[{
-         RowBox[{"Range", "[", "numpts", "]"}], "-", "1"}], ")"}], "/", 
-       RowBox[{"(", 
-        RowBox[{"numpts", "-", "1"}], ")"}]}], ")"}]}]}], ",", 
-   RowBox[{"Frame", "->", "True"}], ",", 
-   RowBox[{"FrameTicks", "->", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"Automatic", ",", "None"}], "}"}], ",", 
+  RowBox[{"numPts", ":=", 
+   RowBox[{"Length", "[", "pts", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"makePlot", ":=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"Re", "@", 
+      RowBox[{"(", 
+       RowBox[{"evals", "@@", 
+        RowBox[{"interpolate", "[", 
+         RowBox[{"pts", ",", "t"}], "]"}]}], ")"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"t", ",", "0", ",", "1"}], "}"}], ",", 
+     RowBox[{"PlotRange", "->", 
       RowBox[{"{", 
        RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0", ",", "1"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "All"}], "}"}]}], "}"}]}], ",", 
+     RowBox[{"Epilog", "->", 
+      RowBox[{"vline", "/@", 
+       RowBox[{"(", 
         RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Range", "[", "numPts", "]"}], "-", "1"}], ")"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"numPts", "-", "1"}], ")"}]}], ")"}]}]}], ",", 
+     RowBox[{"Frame", "->", "True"}], ",", 
+     RowBox[{"FrameTicks", "->", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Automatic", ",", "None"}], "}"}], ",", 
+        RowBox[{"{", 
          RowBox[{
-          RowBox[{"{", 
+          RowBox[{
            RowBox[{
-            RowBox[{
-             RowBox[{"(", 
-              RowBox[{"#", "-", "1"}], ")"}], "/", 
-             RowBox[{"(", 
-              RowBox[{"numpts", "-", "1"}], ")"}]}], ",", 
-            RowBox[{
-             RowBox[{"ToString", "[", 
-              RowBox[{"TraditionalForm", "[", 
-               RowBox[{"labels", "[", 
-                RowBox[{"[", "#", "]"}], "]"}], "]"}], "]"}], "<>", 
-             RowBox[{"StringRiffle", "[", 
+            RowBox[{"{", 
+             RowBox[{
               RowBox[{
                RowBox[{"(", 
-                RowBox[{"ToString", "/@", 
-                 RowBox[{"InputForm", "/@", 
-                  RowBox[{"(", 
-                   RowBox[{
-                    RowBox[{
+                RowBox[{"#", "-", "1"}], ")"}], "/", 
+               RowBox[{"(", 
+                RowBox[{"numPts", "-", "1"}], ")"}]}], ",", 
+              RowBox[{
+               RowBox[{"ToString", "[", 
+                RowBox[{"TraditionalForm", "[", 
+                 RowBox[{"findKLabel", "[", 
+                  RowBox[{"pts", "[", 
+                   RowBox[{"[", "#", "]"}], "]"}], "]"}], "]"}], "]"}], "<>", 
+               
+               RowBox[{"StringRiffle", "[", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{"ToString", "/@", 
+                   RowBox[{"TraditionalForm", "/@", 
+                    RowBox[{"(", 
                     RowBox[{"pts", "[", 
-                    RowBox[{"[", "#", "]"}], "]"}], "/", "2"}], "/", 
-                    "\[Pi]"}], ")"}]}]}], ")"}], ",", 
-               RowBox[{"{", 
-                RowBox[{"\"\<(\>\"", ",", "\"\<, \>\"", ",", "\"\<)\>\""}], 
-                "}"}]}], "]"}]}]}], "}"}], "&"}], "/@", 
-         RowBox[{"Range", "[", 
-          RowBox[{"1", ",", "numpts"}], "]"}]}], ",", "None"}], "}"}]}], 
-     "}"}]}], ",", 
-   RowBox[{"FrameLabel", "->", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"TraditionalForm", "[", "k", "]"}], ",", "\"\<E/meV\>\""}], 
-     "}"}]}], ",", 
-   RowBox[{"FrameStyle", "->", 
-    RowBox[{"Directive", "[", 
-     RowBox[{
-      RowBox[{"Thickness", "[", ".003", "]"}], ",", "16"}], "]"}]}], ",", 
-   RowBox[{"AspectRatio", "->", 
-    RowBox[{"1", "/", "3"}]}], ",", 
-   RowBox[{"ImageSize", "->", "Full"}]}], "]"}], "\n"}], "Input",
- CellChangeTimes->{{3.852708836528089*^9, 
-  3.8527088365561447`*^9}},ExpressionUUID->"4986957f-465f-4a1c-89fb-\
-3e2c36bfc0af"]
+                    RowBox[{"[", "#", "]"}], "]"}], ")"}]}]}], ")"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"\"\<(\>\"", ",", "\"\<, \>\"", ",", "\"\<)\>\""}], 
+                  "}"}]}], "]"}]}]}], "}"}], "&"}], "/@", 
+           RowBox[{"Range", "[", 
+            RowBox[{"1", ",", "numPts"}], "]"}]}], ",", "None"}], "}"}]}], 
+       "}"}]}], ",", 
+     RowBox[{"FrameLabel", "->", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"TraditionalForm", "[", "\"\<k\>\"", "]"}], ",", 
+        "\"\<E/meV\>\""}], "}"}]}], ",", 
+     RowBox[{"FrameStyle", "->", 
+      RowBox[{"Directive", "[", 
+       RowBox[{
+        RowBox[{"Thickness", "[", ".003", "]"}], ",", "16"}], "]"}]}], ",", 
+     RowBox[{"ImageSize", "->", "Large"}]}], "]"}]}], "\n", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rules", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"metricR", "[", 
+    RowBox[{"k1_", ",", "k2_", ",", "k3_"}], "]"}], "=", 
+   RowBox[{"Simplify", "[", 
+    RowBox[{
+     RowBox[{"metric", ".", 
+      RowBox[{"(", 
+       RowBox[{"R", "[", 
+        RowBox[{"k1", ",", "k2", ",", "k3"}], "]"}], ")"}]}], "/.", " ", 
+     "rules"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ksAndLabels", "=", 
+   RowBox[{"(", GridBox[{
+      {
+       RowBox[{"kGamma", "=", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", "0"}], "}"}]}], 
+       "\"\<\[CapitalGamma]\>\""},
+      {
+       RowBox[{"kZ", "=", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0", ",", "\[Pi]"}], "}"}]}], "\"\<Z\>\""},
+      {
+       RowBox[{"kM", "=", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"2", "\[Pi]"}], "3"], 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "1", ",", "0"}], "}"}]}]}], "\"\<M\>\""},
+      {
+       RowBox[{"kMp", "=", 
+        RowBox[{
+         RowBox[{"-", "kM"}], "+", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", 
+           RowBox[{"2", "\[Pi]"}], ",", "0"}], "}"}]}]}], "\"\<M'\>\""},
+      {
+       RowBox[{"kK", "=", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"2", "\[Pi]"}], "3"], 
+         RowBox[{"{", 
+          RowBox[{"1", ",", 
+           RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], "\"\<K\>\""},
+      {
+       RowBox[{"kKp", "=", 
+        RowBox[{"-", "kK"}]}], "\"\<K'\>\""}
+     }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"{", 
+    RowBox[{"kGamma", ",", "kM", ",", "kMp", ",", "kGamma"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", "makePlot"}], "Input",
+ CellChangeTimes->{
+  3.853197995529564*^9},ExpressionUUID->"2a8e4c92-40ea-44ee-b321-\
+cfd3be02c36b"]
 },
 WindowSize->{1080, 576},
 WindowMargins->{{0, Automatic}, {Automatic, 48}},
@@ -221,7 +243,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 6049, 184, 525, "Input",ExpressionUUID->"4986957f-465f-4a1c-89fb-3e2c36bfc0af"]
+Cell[558, 20, 6778, 206, 626, "Input",ExpressionUUID->"2a8e4c92-40ea-44ee-b321-cfd3be02c36b"]
 }
 ]
 *)

@@ -269,7 +269,7 @@ class Crystal:
 
             curJk_submatrix = r"curJk[{},{}]".format(row, col)
             code.append(curJk_submatrix + "=" + curJk_submatrix + "+"
-                  + r"({}*{}*curJ);".format(exp1, exp2))
+                  + r"({}*{}*curJ)//Simplify;".format(exp1, exp2))
 
         num_sublats = self.sublats.count()
         code.append(
@@ -278,7 +278,7 @@ class Crystal:
             (curJk[row,col]+ConjugateTranspose[curJk[col,row]]),
             {{row,0,{0}}},
             {{col,0,{0}}}]
-            )]]]])//MatrixForm""".format(
+            )]]]])//MatrixForm;""".format(
                 num_sublats-1, mask+"*" if mask else ""))
 
         self.combined_code.extend(code)
@@ -374,7 +374,7 @@ class Crystal:
         code.append("totalJk=ConstantArray[0,{{{0},{0}}}];".format(
             3 * self.sublats.count()))
         code.extend(self.combined_code)
-        code.append("\"Total J[k]:\"")
+        code.append("\"J[k]:\"")
         code.append("MatrixForm[totalJk]")
 
         code.append(r"valVecPairs[mat_]:="
