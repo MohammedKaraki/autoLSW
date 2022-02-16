@@ -6,6 +6,27 @@ from math import floor
 from coords import Coords
 
 
+def all_elements(generators):
+    """Returns a list of all group elements that can be obtained from the
+    generators list."""
+
+    result = []
+
+    def all_elements_impl(h):
+        h.t -= np.floor(h.t)
+        if h not in result:
+            result.append(h)
+            print(h)
+
+            for g in generators:
+                all_elements_impl(h @ g)
+
+    assert len(generators) != 0
+    all_elements_impl(generators[0])
+
+    return result
+
+
 class GroupElement:
     """A group element in a space group can be represented
     by a pair: O(3) rotation "r" and a fractional translation "t".
@@ -160,7 +181,7 @@ class GroupElement:
 
 class Group:
     def __init__(self, *gens):
-        self.elems = Group._make_group_elems_from_gens(gens)
+        self.elems = all_elements(gens)
 
     @classmethod
     def from_gen_strs(cls, *gen_strs):
@@ -168,41 +189,6 @@ class Group:
                 for gen_str in gen_strs]
 
         return cls(*gens)
-
-    def _make_group_elems_from_gens(gens):
-        """Generate group elements from list of generators."""
-        from itertools import product
-        from functools import reduce
-
-        result = []
-        powers_list = []
-
-        for gs in product(*[Group._all_powers(gen) for gen in gens]):
-            g = reduce(lambda g1, g2: g1 @ g2, gs)
-            g.t -= np.floor(g.t)
-
-            if g not in result:
-                result.append(g)
-
-        return result
-
-
-    def _all_powers(g):
-        """Given a group element, return list of all integer
-        powers, with integer translation parts modded out."""
-        result = []
-
-        x = g
-
-        while True:
-            x = g @ x
-            x.t -= np.floor(x.t)
-            if x in result:
-                break
-
-            result.append(x)
-
-        return result
 
     def __str__(self):
         return "\n".join(
