@@ -16,7 +16,6 @@ def all_elements(generators):
         h.t -= np.floor(h.t)
         if h not in result:
             result.append(h)
-            print(h)
 
             for g in generators:
                 all_elements_impl(h @ g)

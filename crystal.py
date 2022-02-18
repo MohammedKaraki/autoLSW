@@ -269,11 +269,11 @@ class Crystal:
 
             curJk_submatrix = r"curJk[{},{}]".format(row, col)
             code.append(curJk_submatrix + "=" + curJk_submatrix + "+"
-                  + r"({}*{}*curJ)//Simplify;".format(exp1, exp2))
+                  + r"({}*{}*curJ)//Identity;".format(exp1, exp2))
 
         num_sublats = self.sublats.count()
         code.append(
-            r"""(totalJk=totalJk+Simplify[TrigToExp[ComplexExpand[ArrayFlatten[
+            r"""(totalJk=totalJk+Identity[TrigToExp[ComplexExpand[ArrayFlatten[
             ((1/2)*Table[{1}
             (curJk[row,col]+ConjugateTranspose[curJk[col,row]]),
             {{row,0,{0}}},
@@ -332,7 +332,7 @@ class Crystal:
         code.append(
                 r"""{0}[qq1_,qq2_,qq3_]:=ReplaceAll[tildefyRho[
                 {1}[k1,k2,k3], {2}
-                ],{{q1->qq1,q2->qq2,q3->qq3}}]//Simplify;""".format(
+                ],{{q1->qq1,q2->qq2,q3->qq3}}]//Identity;""".format(
                 qrep_function_name,
                 krep_function_name,
                 self._to_mathematica(g.R)))

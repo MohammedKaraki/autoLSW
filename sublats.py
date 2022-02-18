@@ -211,7 +211,7 @@ class MagCrystal:
             )
 
         code.append(r"tildeJq[qq1_,qq2_,qq3_]="
-            r"Simplify[tildefyJ[totalJk]]/.{q1->qq1,q2->qq2,q3->qq3};")
+            r"Identity[tildefyJ[totalJk]]/.{q1->qq1,q2->qq2,q3->qq3};")
 
         code.append(r"myRotationMatrix[n_]:=If[n=={0,0,Norm[n]},IdentityMatrix[3],"
             r"If[n=={0,0,-Norm[n]},RotationMatrix[\[Pi],{1,0,0}],"
@@ -238,9 +238,9 @@ class MagCrystal:
             r"}, mat[[relidxs,relidxs]]]")
 
         code.append(r"localtildeJ[q1_,q2_,q3_]="
-            r"toLocal[tildeJq[q1,q2,q3]]//Chop//Simplify;")
+            r"toLocal[tildeJq[q1,q2,q3]]//Chop//Identity;")
         code.append(r"normalizedlocaltildeJq[q1_,q2_,q3_]="
-            r"normalizer.localtildeJ[q1,q2,q3].normalizer//Simplify;")
+            r"normalizer.localtildeJ[q1,q2,q3].normalizer//Identity;")
 
         # TODO: verify (normalizer[[#2, #2]]/normalizer[[#1, #1]]) factor below
         code.append(r"""
@@ -258,6 +258,6 @@ class MagCrystal:
             """)
 
         code.append(r'Print["R[q1,q2,q3]:"]')
-        code.append(r"MatrixForm@Simplify@R[q1,q2,q3]")
+        code.append(r"MatrixForm@Identity@R[q1,q2,q3]")
 
         print("\n".join(code))
