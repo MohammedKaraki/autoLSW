@@ -15,8 +15,8 @@ group = Group.from_gen_strs(
 z = Fraction(1, 99)
 
 sublats = Sublats([
-    Sublat("A", Coords(1*(-z), 2*(-z), 3*(-z)) + Coords(1, 2, 2), "1"),
-    Sublat("B", Coords(1*z, 2*z, 3*z), "1"),
+    Sublat("A", Coords(1*(-z), 2*(-z), 3*(-z)) + Coords(1, 2, 2), "1/2"),
+    Sublat("B", Coords(1*z, 2*z, 3*z), "1/2"),
     ])
 
 
@@ -27,7 +27,6 @@ conv_axes = [
     ]
 
 crystal = Crystal(group, sublats, conv_axes)
-
 
 crystal.add_bond(sublats["A"].coords + Coords(0, 0, 0),
                  sublats["B"].coords + Coords(0, 0, 0),
@@ -40,7 +39,6 @@ crystal.add_bond(sublats["A"].coords + Coords(0, 0, 0),
                  label="3",
                  H_rep="trivial",
                  )
-
 
 crystal.add_bond(sublats["A"].coords + Coords(0, 0, 0),
                  sublats["A"].coords + Coords(0, 0, 1),
@@ -72,8 +70,17 @@ crystal.add_bond(sublats["A"].coords + Coords(0, 0, 0),
                  H_rep="vector",
                  )
 
+crystal.add_bond(sublats["A"].coords + Coords(0, 0, 0),
+                 sublats["B"].coords + Coords(0, 0, 1),
+                 label="6",
+                 H_rep="vector",
+                 )
 
-
+crystal.add_bond(sublats["A"].coords + Coords(0, 0, 0),
+                 sublats["B"].coords + Coords(0, 0, 0),
+                 label="1",
+                 H_rep="tensor",
+                 )
 
 # crystal.add_rep_of_group_element(
 #     GroupElement.from_str(r"-x,-y,-z"),
