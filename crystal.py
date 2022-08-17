@@ -1,8 +1,10 @@
 import numpy as np
 from fractions import Fraction
 
+import itertools
 from group import Group, GroupElement
 from coords import Coords
+
 
 
 class Crystal:
@@ -42,13 +44,19 @@ class Crystal:
                 "swap": littlegroup_swap}
 
     @staticmethod
-    def _make_matrix_defs(label, H_rep, suggested_J=None, suggested_P=None):
+    def _make_matrix_defs(label, H_rep, only_heisenberg=False,
+            suggested_J=None, suggested_P=None):
         code = []
         template = r"M={{Mxx,Mxy,Mxz},{Myx,Myy,Myz},{Mzx,Mzy,Mzz}}"
+        templateHeisenberg = r"M={{Mj,0,0},{0,Mj,0},{0,0,Mj}}"
 
         if H_rep=="trivial":
             if not suggested_J:
-                code.append(template.replace("M", "J"+label) + ";")
+                if only_heisenberg:
+                    code.append(templateHeisenberg.replace(
+                        "M", "J"+label) + ";")
+                else:
+                    code.append(template.replace("M", "J"+label) + ";")
                 code.append("J=" + "J" + label + ";")
             else:
                 code.append("J=" + suggested_J + ";")
@@ -57,7 +65,12 @@ class Crystal:
             axes = ["x", "y", "z"]
             if not suggested_P:
                 for rowlabel in axes:
-                    code.append(template.replace("M", "P"+rowlabel+label) + ";")
+                    if only_heisenberg:
+                        code.append(templateHeisenberg.replace(
+                            "M", "P"+rowlabel+label) + ";")
+                    else:
+                        code.append(template.replace(
+                            "M", "P"+rowlabel+label) + ";")
                 code.append(
                     "P="
                     + "{"
@@ -72,15 +85,20 @@ class Crystal:
 
             for rowlabel in axes:
                 for collabel in axes:
-                    code.append(template.replace(
-                        "M",
-                        r"\[CapitalSigma]"+rowlabel+collabel+label) + ";")
+                    if only_heisenberg:
+                        code.append(templateHeisenberg.replace(
+                            "M",
+                            r"S"+label+rowlabel+collabel) + ";")
+                    else:
+                        code.append(template.replace(
+                            "M",
+                            r"S"+label+rowlabel+collabel) + ";")
             code.append(
                 r"\[CapitalSigma]="
                 + "{"
                 + ",".join("{"
                            + ",".join(
-                               r"\[CapitalSigma]"+rowlabel+collabel+label
+                               r"S"+label+rowlabel+collabel
                                for collabel in axes
                                )
                            + "}" for rowlabel in axes)
@@ -165,16 +183,32 @@ class Crystal:
 
         return code
 
+
+    # def _inv(intmatrix):
     @staticmethod
-    def _inv(intmatrix):
-        result = np.linalg.inv(intmatrix.astype(int)).astype(int)
-        assert np.array_equal(result@intmatrix, intmatrix@result)
-        assert np.array_equal(result@intmatrix, np.identity(3, dtype=Fraction))
+    def _inv(fracmatrix):
+        def make_array_fractional(arr):
+            return np.array([[Fraction.from_float(x).limit_denominator() for x in row]
+                for row in arr])
+
+
+        def fractional_inv(arr):
+            float_arr = arr.astype(float)
+            float_inv = np.linalg.inv(float_arr)
+            frac_inv = make_array_fractional(float_inv)
+            assert np.all(frac_inv@arr == np.identity(arr.shape[0]))
+
+            return frac_inv
+        return fractional_inv(fracmatrix)
+        # result = np.linalg.inv(intmatrix.astype(int)).astype(int)
+        # assert np.array_equal(result@intmatrix, intmatrix@result)
+        # assert np.array_equal(result@intmatrix, np.identity(3, dtype=Fraction))
 
         return result
 
     def add_bond(self, site1, site2, label, H_rep,
                  mask=None,
+                 only_heisenberg=False,
                  suggested_J=None,
                  suggested_P=None):
         assert H_rep=="trivial" or H_rep=="vector" or H_rep=="tensor", \
@@ -186,6 +220,7 @@ class Crystal:
 
         code.extend(Crystal._make_matrix_defs(label,
                                               H_rep,
+                                              only_heisenberg=only_heisenberg,
                                               suggested_J=suggested_J,
                                               suggested_P=suggested_P))
         code.extend(Crystal._make_constraints(label,
@@ -269,7 +304,7 @@ class Crystal:
 
             curJk_submatrix = r"curJk[{},{}]".format(row, col)
             code.append(curJk_submatrix + "=" + curJk_submatrix + "+"
-                  + r"({}*{}*curJ)//Identity;".format(exp1, exp2))
+                  + r"({}*{}*curJ)//Simplify;".format(exp1, exp2))
 
         num_sublats = self.sublats.count()
         code.append(
@@ -288,6 +323,17 @@ class Crystal:
         return arr.dtype == int or arr.dtype == Fraction
 
     def add_rep_of_group_element(self, g, label):
+        Rinv = Crystal._inv(g.R)
+        tinv = -Rinv@g.t
+        ginv = GroupElement(Rinv, tinv)
+
+        assert (g@ginv).to_str() == "+x,+y,+z"
+
+        self.add_rep_of_group_element_incorrect(g, str(label) + "incorrect")
+        self.add_rep_of_group_element_incorrect(ginv, str(label))
+
+
+    def add_rep_of_group_element_incorrect(self, g, label):
         Rinv = Crystal._inv(g.R)
 
         code = []
@@ -337,17 +383,17 @@ class Crystal:
                 krep_function_name,
                 self._to_mathematica(g.R)))
 
-        code.append(
-            "Print[\"{0}[{{k1,k2,k3}}]=\",MatrixForm[{0}[k1,k2,k3]]]".format(
-                krep_function_name))
 
         self.combined_code.extend(code)
 
 
 
-    def gen_mathematica_code(self, suggested_Efield=None, suggested_strain=None):
+    def gen_mathematica_code(self, 
+            additional_gstrs=None,
+            suggested_Efield=None, suggested_strain=None):
         code = []
-        code.append(r'Clear["Global`*"]')
+        # code.append(r'Clear["Global`*"]')
+
 
         if not suggested_Efield:
             code.append(r"Evector={Ex,Ey,Ez};")
@@ -356,7 +402,7 @@ class Crystal:
 
         if not suggested_strain:
             code.append(r"M={{Mxx,Mxy,Mxz},"
-                        "{Myx,Myy,Myz},{Mzx,Mzy,Mzz}};".replace(
+                        "{Mxy,Myy,Myz},{Mxz,Myz,Mzz}};".replace(
                             "M", r"\[Sigma]"))
         else:
             code.append(r"\[Sigma]={};".format(suggested_strain))
@@ -368,14 +414,56 @@ class Crystal:
                     + "}];")
         code.append("RotAxesInv=Inverse[RotAxes];")
 
+        def group_to_mathematica(additional_gstrs):
+            gStr_code = []
+            gStr_code.append("gStrs={};")
+            gStr_code.append("Rgs={};")
+
+            gStr_code.append("primitiveGroupElemCount={};".format(
+                len(self.group.elems)));
+            gstrs = [h.to_str() for h in self.group.elems]
+            if additional_gstrs is not None:
+                gstrs.extend(additional_gstrs)
+
+            gs = [GroupElement.from_str(x) for x in gstrs]
+            Rgs = [ '{' + ','.join('{' + ','.join(str(x) for x in row) + '}'
+                            for row in g.R) + '}'
+                            for g in gs
+                            ]
+
+            for i, g in enumerate(gs):
+                self.add_rep_of_group_element(g, i+1)
+            gStr_code.append('gStrs={' + ','.join('"'+x+'"' for x in gstrs) + '};')
+            gStr_code.append('Rgs={' + ','.join(Rgs) + '};')
+
+            # i = 0
+            # for h in self.group.elems:
+            #     h_str = h.to_str()
+            #     for dx, dy, dz in itertools.product([0], [0], [0]):
+            #         i += 1
+            #         g = GroupElement.from_str(h_str)
+            #         g.t[0] += dx
+            #         g.t[1] += dy
+            #         g.t[2] += dz
+            #
+            #         g_str = g.to_str()
+            #         self.add_rep_of_group_element(
+            #             GroupElement.from_str(g_str),
+            #             str(i))
+            #
+            #         gStr_code.append("gStrs=gStrs~Join~{{\"{}\"}};".format(g_str))
+            #         gStr_code.append("Rgs=Rgs~Join~{{{}}};".format(
+            #             "{" + ",".join("{" + ",".join(str(x) for x in row) + "}"
+            #                 for row in g.R) + "}"))
+            return "\n".join(gStr_code)
+
+        code.append(group_to_mathematica(additional_gstrs))
 
 
 
         code.append("totalJk=ConstantArray[0,{{{0},{0}}}];".format(
             3 * self.sublats.count()))
         code.extend(self.combined_code)
-        code.append("\"J[k]:\"")
-        code.append("MatrixForm[totalJk]")
 
         code.append(r"valVecPairs[mat_]:="
             r"(sys=Eigensystem[mat];"
@@ -383,5 +471,8 @@ class Crystal:
             r"Transpose@{sys[[1,ord]],sys[[2,ord]]})")
         code.append(r"vecSym[vec_,sym_]:="
             r"Conjugate[vec].sym.vec/(Conjugate[vec].vec)//Rationalize")
-
+        code.append(r'\[Rho]str[s_] :='
+            r'ToExpression["\[Rho]q" <> ToString[FirstPosition[gStrs, s][[1]]]]')
+        code.append(r'\[Rho]strincorrect[s_] :='
+            r'ToExpression["\[Rho]q" <> ToString[FirstPosition[gStrs, s][[1]]] <> "incorrect"]')
         print("\n".join(code))

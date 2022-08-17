@@ -73,7 +73,7 @@ class GroupElement:
     def to_str(self):
         def row_to_str(row):
             assert len(row) == 4
-            assert all(x in (-1, 0, 1) for x in row[:3])
+            # assert all(x in (-2, -1, 0, 1, 2) for x in row[:3])
 
             result = ""
             for i, v in enumerate(('x', 'y', 'z')):
@@ -81,6 +81,12 @@ class GroupElement:
                     result += "+" + v
                 elif row[i] == -1:
                     result += "-" + v
+                elif row[i] > 0:
+                    result += "+" + str(row[i]) + v
+                elif row[i] < 0:
+                    result += str(row[i]) + v
+                else:
+                    assert row[i] == 0
 
             translation = row[-1]
             if translation != 0:
@@ -90,7 +96,7 @@ class GroupElement:
         result = ",".join(row_to_str(list(self.R[i]) + [self.t[i]])
             for i in range(3))
 
-        assert(GroupElement.from_str(result) == self)
+        assert GroupElement.from_str(result) == self, result
         return result
 
     def _parse_term(term):
@@ -100,13 +106,25 @@ class GroupElement:
         """
 
         result = None
+        match = re.search(r'^(([0-9]+)(/([0-9]+))?)?([xyz])', term)
 
-        if term == "x":
-           result = np.array([1, 0, 0, 0])
-        elif term == "y":
-           result = np.array([0, 1, 0, 0])
-        elif term == "z":
-           result = np.array([0, 0, 1, 0])
+        if match:
+            var = match.group(5)
+            factor = Fraction(1)
+            if match.group(1):
+                factor *= int(match.group(2))
+                if match.group(3):
+                    factor /= int(match.group(4))
+
+            if var == "x":
+               result = factor * np.array([1, 0, 0, 0])
+            elif var == "y":
+               result = factor * np.array([0, 1, 0, 0])
+            elif var == "z":
+               result = factor * np.array([0, 0, 1, 0])
+            else:
+                assert False
+
         elif re.match(r"^\d+$", term):
            num = int(term)
            result = np.array([0, 0, 0, num])
@@ -115,7 +133,7 @@ class GroupElement:
            numer, denom = int(numer), int(denom)
            result = np.array([0, 0, 0, Fraction(numer, denom)])
         else:
-            assert(False, "Invalid term")
+            assert False, "Invalid term"
 
         return result
 
@@ -195,3 +213,5 @@ class Group:
             + [str(g) for g in self.elems]
             + ["-----------------------------"]
             )
+
+

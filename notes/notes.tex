@@ -2,26 +2,31 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{mathtools}
 \usepackage[left=.8in,right=.8in]{geometry}
+\usepackage{mathtools}
 % \usepackage[parfill]{parskip}
 \usepackage{siunitx}
 \usepackage{microtype}
+\usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{bm}
 \usepackage{xcolor}
 \usepackage{cite}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{booktabs}
-\usepackage{multirow}
 \usepackage{longtable}
+\usepackage{multirow}
+\usepackage[section]{placeins}
+
 
 \newcommand{\mat}[1]{\bm{\mathit{#1}}}
 \newcommand{\groupelem}[2]{\{{#1}|{#2}\}}
 \newcommand{\m}{\textrm{m}}
 \DeclareMathOperator{\Tr}{Tr}
 \DeclareMathOperator{\diag}{diag}
+
+\usepackage{amsmath,amsfonts}
+\DeclareMathOperator{\spn}{span}
 
 \begin{document}
 \tableofcontents
@@ -111,16 +116,15 @@ Specifically, if the bond $\langle ij\rangle$ is invariant under $g$ (up to swap
 \end{equation}
 
 \section{Symmetry representation in $k$-space}
-Let $A=(\bm{a}_1\;\bm{a}_2\;\bm{a}_3)$ be the matrix whose columns are the primitive translations of the lattice. Any unit cell can be labelled by a vector $\bm{n}={(n_1\;n_2\;n_3)}^T\in\mathbb{Z}^{3}$:
-\begin{align}
-\bm{r}_{\bm{n}} &= n_1\bm{a}_1+n_2\bm{a}_2+n_3\bm{a}_3\\
-  &= A\bm{n}.
-\end{align}
-Let $A\bm{\delta}_i$, for possibly fractional vector $\bm{\delta}_i$, denote the position of the atom $i$ in the unit cell $\bm{n}=\bm{0}$. The position of any atom in the crystal can be written as
-\begin{equation}
-  \bm{r}=\mat{A}(\bm{n}+\bm{\delta}),
-\end{equation}
-for unique $\bm{n}\in\mathbb{Z}^{3}$ and $\bm{\delta}\in\{\bm{\delta}_i\}$.
+For a given choice of lattice translations $(\bm{a}_1,\bm{a}_2,\bm{a}_3)$, and fractional coordinates $\{\bm{\delta_i}\}$ for each atom in the unit cell, the coordinates of any atom in the crystal can be written as
+\begin{align*}
+  \bm{r}&= A (\bm{n}+\bm{\delta}_i)\\
+   &\equiv \begin{pmatrix}
+  \bm{a}_1&\bm{a}_2&\bm{a}_3
+  \end{pmatrix}
+(\bm{n}+\bm{\delta})
+\end{align*}
+with a unique choice of $\bm{n}$ and $\bm{\delta}\in\{\bm{\delta}_i\}$.
 
 An element $g=\{R|\bm{t}\}\in G$ consists of a (im-)\@proper rotation matrix $R$ and a translation $\bm{t}$:
 \begin{equation}
@@ -128,7 +132,7 @@ An element $g=\{R|\bm{t}\}\in G$ consists of a (im-)\@proper rotation matrix $R$
 \end{equation}
 with an inverse $g^{-1}=\{R^{-1}|-R^{-1}\bm{t}\}$.
 
-Therefore, the spins transform as
+Under $g$, the spins transform as
 \begin{align*}
   \bm{S}_{A(\bm{n}+\bm{\delta})}&\xrightarrow{g}\hat{g}^{\dagger}\bm{S}_{A(\bm{n}+\bm{\delta})}\hat{g}\\
    &= O_{g}\bm{S}_{g^{-1}(A(\bm{n}+\bm{\delta}))}\\
@@ -153,6 +157,7 @@ Thus, in Fourier space
 
 
 \section{The relation between crystalline and magnetic-order lattices}
+Given 
 Let $\{\bm{a}_i\}$ refer to the primitive Bravais vectors of the crystalline lattice, and $\{\bm{b}_i\}$ to the corresponding primitive vectors in reciprocal space, that is,
 \begin{equation}\label{recips}
   \bm{a}_i\cdot\bm{b}_j=\delta_{ij}.
@@ -342,7 +347,38 @@ Therefore, the character of the 6-dimensional representation of a strain perturb
 
 \newcommand{\ndtwonio}{Nd\textsubscript{2}NiO\textsubscript{4.11}}
 
-...............
+
+
+\newcommand{\nhat}{\hat{\bm{n}}}
+\begin{table}[htpb]
+  \centering
+\begin{tabular}{cc}
+  \toprule
+  Applied Perturbation & Breaks\\
+  \midrule
+  any $\bm{E}$ & $i$, $i'$\\
+  $\bm{E}$ not $\parallel \nhat$ & $i$, $i'$, $2_{\nhat}$, $3_{\nhat}$, $4_{\nhat}$, $6_{\nhat}$, $2_{\nhat}'$, $3_{\nhat}'$, $4_{\nhat}'$, $6_{\nhat}'$\\
+  $\bm{E}$ not $\perp \nhat$ & $i$, $i'$, $m_{\nhat}$, $m_{\nhat}'$\\
+  any $\bm{B}$ & $1'$, $i'$\\
+  $\bm{B}$ not $\parallel \nhat$ & $1'$, $i'$, $2_{\nhat}$, $3_{\nhat}$, $4_{\nhat}$, $6_{\nhat}$, $m_{\nhat}'$\\
+  $\bm{B}$ not $\perp \nhat$ & $1$, $i'$, $m_{\nhat}$, $m_{\nhat}'$\\
+  $\sigma\notin\spn (nn^T,n_{\perp1}n_{\perp1}^T,n_{\perp2}n_{\perp2}^T)$ & $2_{\nhat}$, $m_{\nhat}$, $2_{\nhat}'$, $m_{\nhat}'$\\
+  $\bm{B}$ not $\perp \nhat$ & $i$, $m_{\nhat}$, $m_{\nhat}'$\\
+  \bottomrule
+\end{tabular}
+  \caption{$i$ is inversion, $1'$ time-reversal, $m_{\nhat}$ a mirror perpendicular to $\nhat$, $2_{\nhat}$ a two-fold axis parallel to $\nhat$, etc. $\nhat_{\perp1}$ and $\nhat_{\perp2}$ denote two vectors perpendicular to $\nhat$.}
+\end{table}
+
+\section*{Identification of MSG}
+\section*{To-do}
+\begin{itemize}
+  \item test code for enlarging unit cell by comparing to non-enlarged magnetic unit cell but a larger unit cell.
+  \item web application for creating models
+    \begin{itemize}
+      \item sg+wp
+    \end{itemize}
+  \item EuIn\textsubscript{2}As2 ($P6_{1}2'2'$ $2a$) has band touchings by monadroy
+\end{itemize}
 
 \bibliography{refs}{}
 \bibliographystyle{plain}

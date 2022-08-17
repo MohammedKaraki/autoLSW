@@ -4,6 +4,9 @@ from fractions import Fraction
 
 class Coords:
     def __init__(self, x, y, z):
+        assert isinstance(x, int) or isinstance(x, Fraction)
+        assert isinstance(y, int) or isinstance(y, Fraction)
+        assert isinstance(z, int) or isinstance(z, Fraction)
         self.coords_arr = np.array([x, y, z], dtype=Fraction)
 
     @classmethod

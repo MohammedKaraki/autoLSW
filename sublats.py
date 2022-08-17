@@ -30,7 +30,7 @@ def find_fourier_ns(M):
     # of M.
     # Both assertion are used in this function.
 
-    N = 5
+    N = 7
     result = []
     for x, y, z in product(range(-N, N+1),
                            range(-N, N+1),
@@ -82,12 +82,14 @@ class Sublats:
         sublat = None
         for cand_sublat in self.sublats_list:
             if (site - cand_sublat.coords).all_ints():
-                assert(sublat is None)
+                assert sublat is None
                 sublat = cand_sublat
+
         assert(sublat is not None)
 
         translation = site - sublat.coords
         assert translation.all_ints();
+        # breakpoint()
         return sublat, translation
 
 
@@ -134,9 +136,8 @@ class MagCrystal:
 
         assert M.dtype == int
         factor = np.linalg.det(M)
-        assert factor.is_integer()
         int_factor = int(factor)
-        assert int_factor == factor
+        assert abs(factor - int_factor) < 10e-10, factor
         factor = int_factor
 
         assert isinstance(factor, int), factor
@@ -186,8 +187,8 @@ class MagCrystal:
                     )
 
                 code.append("tildeRhoBlock[orig_,{},{},q_,Rg_]:="
-                    "(1/{})Total[(Exp[-I (q+2\[Pi]#).Minv.(-{{{},{},{}}}"
-                    "+Rg.{{{},{},{}}})]"
+                    "(1/{})Total[(Exp[-I (q+2\[Pi]#).Minv.({{{},{},{}}}"
+                    "-Rg.{{{},{},{}}})]"
                     "getBlock[orig,{},{},Transpose[Minv]."
                     "(q+2\[Pi]#)])&/@fourierns]".format(
                         magidx1, magidx2,
@@ -252,12 +253,10 @@ class MagCrystal:
 
             R[q1_,q2_,q3_]=2(normalizedlocaltildeJq[q1,q2,q3]
                 +chempot)[[Ridxs,Ridxs]];
-            metric=KroneckerProduct[IdentityMatrix[Length[R[0,0,0]]/2], 
+            metric=KroneckerProduct[IdentityMatrix[Length[R[0,0,0]]/2],
                PauliMatrix[2]];
             evals[q1_,q2_,q3_]:=NumericalSort@Chop@Eigenvalues[metric.R[q1,q2,q3]];
             """)
 
-        code.append(r'Print["R[q1,q2,q3]:"]')
-        code.append(r"MatrixForm@Identity@R[q1,q2,q3]")
 
         print("\n".join(code))
